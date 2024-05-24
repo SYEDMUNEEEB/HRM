@@ -14,23 +14,42 @@ router.post('/register', async (req, res) => {
     if (user) {
       return res.status(400).json({ msg: 'User already exists' });
     }
-    user = new User({ name, email, password, role });
+    user = new User({ name, email, password, role, status: 'PendingApproval' }); // Mark user as pending approval
 
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
 
     await user.save();
 
-    const payload = { user: { id: user.id } };
-    jwt.sign(payload, 'jwtSecret', { expiresIn: 360000 }, (err, token) => {
-      if (err) throw err;
-      res.json({ token });
-    });
+    // No need to sign JWT token immediately after registration
+    // Instead, you can send a confirmation email to the admin for approval
+
+    res.json({ msg: 'Registration successful. Awaiting admin approval' }); // Respond with success message
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
   }
 });
+router.put('/:userId/approve', async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+      const user = await User.findById(userId);
+      if (!user) {
+          return res.status(404).json({ msg: 'User not found' });
+      }
+
+      // Update user status to 'Approved'
+      user.status = 'Approved';
+      await user.save();
+
+      res.json({ msg: 'User approved successfully', user: user }); // Respond with success message and updated user details
+  } catch (error) {
+      console.error('Error approving user:', error);
+      res.status(500).json({ msg: 'Server error' });
+  }
+});
+
 
 // Login User
 router.post('/login', async (req, res) => {

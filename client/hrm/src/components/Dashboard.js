@@ -88,6 +88,23 @@ const Dashboard = () => {
             notifyError('Failed to update task status.');
         }
     };
+    const approveUser = async (userId) => {
+      try {
+          const response = await axios.put(`http://localhost:5000/api/${userId}/approve`);
+          const updatedUser = response.data.user; // Assuming your backend sends back the updated user
+          setUsers(users.map(user => user._id === userId ? updatedUser : user)); // Update the user in state
+          notifySuccess('User approved successfully.');
+  
+          // Register the user
+       
+  
+         
+      } catch (error) {
+          console.error('Error approving user:', error);
+          notifyError('Failed to approve user.');
+      }
+  };
+  
 
     const filteredUsers = users.filter(user =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -185,6 +202,7 @@ const Dashboard = () => {
                         <Pie data={taskCompletionPercentage} />
                     </div>
 
+                 
                     <div className="bg-white p-4 rounded-lg shadow-md">
                         <h2 className="text-xl font-bold mb-4 flex items-center">
                             <FontAwesomeIcon icon={faUser} className="mr-2" />
@@ -212,13 +230,20 @@ const Dashboard = () => {
                                             >
                                                 <FontAwesomeIcon icon={faTrash} />
                                             </button>
+                                           
+                                                <button
+                                                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded ml-2"
+                                                    onClick={() => approveUser(user._id)}
+                                                >
+                                                    Approve
+                                                </button>
+                                           
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                     </div>
-
                     <div className="bg-white p-4 rounded-lg shadow-md">
                         <h2 className="text-xl font-bold mb-4 flex items-center">
                             <FontAwesomeIcon icon={faTasks} className="mr-2" />
