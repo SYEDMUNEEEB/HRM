@@ -72,13 +72,23 @@ router.get('/users', async (req, res) => {
   }
 });
 
-
+router.delete('/users/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    // Find the user by ID and delete it
+    await User.findByIdAndDelete(userId);
+    res.json({ msg: 'User deleted successfully' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
 // Create Leave Request
 // Create Leave Request
 router.post('/leave', async (req, res) => {
-  const { startDate, endDate } = req.body;
+  const { startDate, endDate,username,email,role } = req.body;
   try {
-    const leaveRequest = new LeaveRequest({ startDate, endDate, status: 'Pending' });
+    const leaveRequest = new LeaveRequest({ username,email,role,startDate, endDate, status: 'Pending' });
     await leaveRequest.save();
     res.json(leaveRequest);
   } catch (err) {
@@ -89,9 +99,9 @@ router.post('/leave', async (req, res) => {
 
 // Record Attendance
 router.post('/attendance', async (req, res) => {
-  const { username, email, date, status } = req.body;
+  const { username, email, date, status,role } = req.body;
   try {
-    const attendance = new Attendance({ username, email, date, status });
+    const attendance = new Attendance({ username, email, date, status,role });
     await attendance.save();
     res.json(attendance);
   } catch (err) {
@@ -177,6 +187,56 @@ router.delete('/attendance/:attendanceId', async (req, res) => {
   }
 });
 
-module.exports = router;
+// Record Trainee Attendance
+router.post('/trainee/attendance', async (req, res) => {
+  const { date, status } = req.body;
+  try {
+    const attendance = new Attendance({ date, status });
+    await attendance.save();
+    res.json(attendance);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// Fetch Trainee Attendance
+router.get('/trainee/attendance', async (req, res) => {
+  try {
+    const attendance = await TraineeAttendance.find();
+    res.json(attendance);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// Update Trainee Attendance
+router.put('/trainee/attendance/:id', async (req, res) => {
+  const { status } = req.body;
+  try {
+    const attendance = await TraineeAttendance.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+    res.json(attendance);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// Delete Trainee Attendance
+router.delete('/trainee/attendance/:id', async (req, res) => {
+  try {
+    await TraineeAttendance.findByIdAndDelete(req.params.id);
+    res.json({ msg: 'Trainee attendance deleted' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
 
 module.exports = router;

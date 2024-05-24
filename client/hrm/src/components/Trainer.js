@@ -1,12 +1,15 @@
-// Trainer.js
-
 import React, { useState } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUserShield } from '@fortawesome/free-solid-svg-icons';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Trainer() {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
+    role: '',
     leaveData: { startDate: '', endDate: '' },
     attendanceData: { date: '', status: '' }
   });
@@ -22,8 +25,9 @@ function Trainer() {
       await axios.post('http://localhost:5000/api/leave', {
         username: formData.username,
         email: formData.email,
+        role: formData.role,
         startDate: formData.leaveData.startDate,
-        endDate: formData.leaveData.endDate
+        endDate: formData.leaveData.endDate,
       });
       setSuccessMessage('Your leave request is submitted successfully.');
     } catch (error) {
@@ -38,7 +42,8 @@ function Trainer() {
         username: formData.username,
         email: formData.email,
         date: formData.attendanceData.date,
-        status: formData.attendanceData.status
+        status: formData.attendanceData.status,
+        role: formData.role,
       });
       setSuccessMessage('Your attendance is marked successfully.');
     } catch (error) {
@@ -56,9 +61,46 @@ function Trainer() {
 
   return (
     <div className="max-w-lg mx-auto mt-10">
-      <h1 className="text-3xl font-bold mb-6">Trainer</h1>
+      <ToastContainer/>
+      <h1 className="text-3xl font-bold mb-6">Welcome into the Human Resource Management Trainer Dashboard</h1>
       <div className="space-y-6">
         <form onSubmit={handleLeaveSubmit}>
+          <div className="flex flex-col space-y-2">
+            <label className="text-lg">Username</label>
+            <input
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              className="border rounded-md px-3 py-2"
+              required
+            />
+          </div>
+          <div className="flex flex-col space-y-2">
+            <label className="text-lg">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className="border rounded-md px-3 py-2"
+              required
+            />
+          </div>
+          <div className="flex items-center border rounded py-2 px-3 mt-4">
+            <FontAwesomeIcon icon={faUserShield} className="text-gray-400 mr-2" />
+            <select
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              className="appearance-none border-none w-full text-gray-700 py-1 px-2 leading-tight focus:outline-none"
+              required
+            >
+              <option value="">Select Role</option>
+              <option value="Trainer">Trainer</option>
+              <option value="Trainee">Trainee</option>
+            </select>
+          </div>
           <div className="flex flex-col space-y-2">
             <label className="text-lg">Start Date</label>
             <input
@@ -85,28 +127,6 @@ function Trainer() {
         </form>
         <form onSubmit={handleAttendanceSubmit}>
           <div className="flex flex-col space-y-2">
-            <label className="text-lg">Username</label>
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              className="border rounded-md px-3 py-2"
-              required
-            />
-          </div>
-          <div className="flex flex-col space-y-2">
-            <label className="text-lg">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="border rounded-md px-3 py-2"
-              required
-            />
-          </div>
-          <div className="flex flex-col space-y-2">
             <label className="text-lg">Date</label>
             <input
               type="date"
@@ -130,6 +150,17 @@ function Trainer() {
               <option value="Present">Present</option>
               <option value="Absent">Absent</option>
             </select>
+          </div>
+          <div className="flex flex-col space-y-2">
+            <label className="text-lg">Start Date</label>
+            <input
+              type="date"
+              name="startDate"
+              value={formData.leaveData.startDate}
+              onChange={handleLeaveChange}
+              className="border rounded-md px-3 py-2"
+              required
+            />
           </div>
           <button type="submit" className="bg-blue-500 text-white py-2 px-4 mt-4 rounded-md hover:bg-blue-600">Submit Attendance</button>
         </form>

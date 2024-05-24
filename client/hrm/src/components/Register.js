@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faEnvelope, faLock, faUserShield } from '@fortawesome/free-solid-svg-icons';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -32,7 +34,7 @@ const Register = () => {
       console.log('Response Data:', res.data); 
         
       // Log the data property of the response
-    console.log(body)
+      console.log(body);
       navigate("/");
     } catch (err) {
       console.error('Error:', err); // Log any error
@@ -41,10 +43,18 @@ const Register = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
+      <div className="hidden lg:block w-1/2">
+        <img
+          src="https://tecdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+          className="w-full h-full object-cover"
+          alt="Sample"
+        />
+      </div>
+      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md lg:w-1/2">
         <h1 className="text-2xl font-bold text-center">Register</h1>
         <form onSubmit={onSubmit} className="space-y-6">
-          <div>
+          <div className="flex items-center border rounded py-2 px-3">
+            <FontAwesomeIcon icon={faUser} className="text-gray-400 mr-2" />
             <input
               type="text"
               placeholder="Name"
@@ -52,10 +62,11 @@ const Register = () => {
               value={name}
               onChange={onChange}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
+              className="appearance-none border-none w-full text-gray-700 py-1 px-2 leading-tight focus:outline-none"
             />
           </div>
-          <div>
+          <div className="flex items-center border rounded py-2 px-3">
+            <FontAwesomeIcon icon={faEnvelope} className="text-gray-400 mr-2" />
             <input
               type="email"
               placeholder="Email Address"
@@ -63,10 +74,11 @@ const Register = () => {
               value={email}
               onChange={onChange}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
+              className="appearance-none border-none w-full text-gray-700 py-1 px-2 leading-tight focus:outline-none"
             />
           </div>
-          <div>
+          <div className="flex items-center border rounded py-2 px-3">
+            <FontAwesomeIcon icon={faLock} className="text-gray-400 mr-2" />
             <input
               type="password"
               placeholder="Password"
@@ -74,15 +86,16 @@ const Register = () => {
               value={password}
               onChange={onChange}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
+              className="appearance-none border-none w-full text-gray-700 py-1 px-2 leading-tight focus:outline-none"
             />
           </div>
-          <div>
+          <div className="flex items-center border rounded py-2 px-3">
+            <FontAwesomeIcon icon={faUserShield} className="text-gray-400 mr-2" />
             <select
               name="role"
               value={role}
               onChange={onChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300"
+              className="appearance-none border-none w-full text-gray-700 py-1 px-2 leading-tight focus:outline-none"
             >
               <option value="Admin">Admin</option>
               <option value="Trainer">Trainer</option>

@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard';
 import Task from './components/Task';
 import Trainer from "./components/Trainer";
 import Trainee from "./components/Trainee"
+import Attendance from './components/Attendance';
 const App = () => {
   return (
     <BrowserRouter>
@@ -17,6 +18,7 @@ const App = () => {
           <Route path="/task" element={<Task />} />
           <Route  path="/trainee" element={<Trainee/>} />
           <Route path="/trainer" element={<Trainer/>} />
+          <Route path="/attendance" element={<Attendance />} />
         </Routes>
       </div>
     </BrowserRouter>
